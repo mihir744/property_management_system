@@ -1,248 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Shivtej Real Estate - Find Your Dream Property</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    {% load static %}
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'home.css' %}">
-
-    <!-- Tailwind (optional – you already used it) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>Shivtej Real Estate — Find Your home outside your home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'home.css' %}">
 </head>
-
 <body>
-<!-- ================= HEADER ================= -->
-<header class="header">
-    <div class="header-top">
-        <div class="header-top-content">
-            <div class="header-contact">
-                <div class="contact-item">📞 <span id="headerPhone">+91 8605452622</span></div>
-                <div class="contact-item">📧 <span id="headerEmail">shivtejrealestate@gmail.com</span></div>
-            </div>
-            <div class="contact-item">🕒 Mon - Sat: 9:00 AM - 7:00 PM</div>
-        </div>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="header" id="siteHeader">
+  <div class="header-top">
+    <div class="header-top-content">
+      <div class="header-contact">
+        <span class="contact-item">📞 <span id="headerPhone">+91 86054 52622</span></span>
+        <span class="contact-item">✉ <span id="headerEmail">shivtejrealestate@gmail.com</span></span>
+      </div>
+      <span class="contact-item">Mon – Sat &nbsp;·&nbsp; 9 AM – 7 PM</span>
     </div>
+  </div>
 
-    <div class="header-main">
-        <div class="header-content">
-            <a href="/" class="logo">
-                <div class="logo-icon">SR</div>
-                <h1 class="logo-text" id="companyName">Shivtej Real Estate</h1>
-            </a>
+  <div class="header-main">
+    <div class="header-content">
+      <a href="/" class="logo">
+        <div class="logo-icon">SR</div>
+        <span class="logo-text" id="companyName">Shivtej Real Estate</span>
+      </a>
 
-            <nav class="nav-menu">
-                <a href="#" class="nav-link active" onclick="showSection('home')">Home</a>
-                <a href="#" class="nav-link" onclick="showSection('rent')">Rent</a>
-                <a href="#" class="nav-link" onclick="showSection('sale')">Buy</a>
-                <a href="#" class="nav-link" onclick="showSection('commercial')">Commercial</a>
+      <nav class="nav-menu">
+        <a href="#" class="nav-link active" onclick="showSection('home',event)">Home</a>
+        <a href="#" class="nav-link" onclick="showSection('rent',event)">Rent</a>
+        <a href="#" class="nav-link" onclick="showSection('sale',event)">Buy</a>
+        <a href="#" class="nav-link" onclick="showSection('commercial',event)">Commercial</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'preferences' %}" class="nav-link">Preferences</a>
+          <a href="{% url 'logout' %}" class="nav-link">Log out</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="nav-link">Login</a>
+          <a href="{% url 'signup' %}" class="nav-link">Sign up</a>
+        {% endif %}
+      </nav>
 
-                {% if user.is_authenticated %}
-                    <a href="{% url 'preferences' %}">Set Preferences</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}">Login</a>
-                    <a href="{% url 'signup' %}">Sign Up</a>
-                {% endif %}
-            </nav>
-
-            {% if not user.is_authenticated %}
-            <div class="auth-buttons" id="authButtons">
-                <a href="{% url 'login' %}" class="btn-login">Login</a>
-                <a href="{% url 'signup' %}" class="btn-signup">Sign Up</a>
-            </div>
-            {% endif %}
-
-        </div>
+      {% if not user.is_authenticated %}
+      <div class="auth-buttons">
+        <a href="{% url 'login' %}" class="btn-login">Login</a>
+        <a href="{% url 'signup' %}" class="btn-signup">Get Started</a>
+      </div>
+      {% endif %}
     </div>
+  </div>
 </header>
 
 
-
-
-<!-- ================= HERO ================= -->
+<!-- ═══════════════════ HERO ═══════════════════ -->
 <section id="homeSection" class="hero">
-    <div class="hero-content">
-        <h1 class="hero-title" id="heroTitle">Find Your Dream Property</h1>
-        <p class="hero-subtitle" id="heroSubtitle">
-            Discover the perfect home with Shivtej Real Estate
-        </p>
+  <div class="hero-content">
 
-        <div class="search-box">
-            <div class="search-tabs">
-                <button class="search-tab active" onclick="setSearchType('rent')">Rent</button>
-                <button class="search-tab" onclick="setSearchType('buy')">Buy</button>
-                <button class="search-tab" onclick="setSearchType('commercial')">Commercial</button>
-            </div>
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">Premium Real Estate · Pune</div>
 
-            <form class="search-form" onsubmit="handleSearch(event)">
-                <input class="search-input" id="searchInput" placeholder="Enter location, property type">
-                <button class="search-btn">🔍 Search</button>
-            </form>
+      <h1 class="hero-title" id="heroTitle">
+        Find Your<br>
+        <em>Dream</em> Property
+      </h1>
+
+      <p class="hero-subtitle" id="heroSubtitle">
+        Shivtej Real Estate brings you handpicked homes, commercial spaces and investments — with guidance you can trust.
+      </p>
+
+      <div class="search-box">
+        <div class="search-tabs">
+          <button class="search-tab active" onclick="setSearchType('rent',event)">Rent</button>
+          <button class="search-tab" onclick="setSearchType('buy',event)">Buy</button>
+          <button class="search-tab" onclick="setSearchType('commercial',event)">Commercial</button>
         </div>
+        <form class="search-form" onsubmit="handleSearch(event)">
+          <input class="search-input" id="searchInput" placeholder="Location or property type…" autocomplete="off">
+          <button class="search-btn" type="submit">Search</button>
+        </form>
+      </div>
     </div>
+
+    <!-- RIGHT — stat cards -->
+    <div class="hero-right">
+      <div class="hero-stat-card">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Properties listed</div>
+      </div>
+      <div class="hero-stat-row">
+        <div class="hero-stat-card">
+          <div class="stat-number">1.2k</div>
+          <div class="stat-label">Happy clients</div>
+        </div>
+        <div class="hero-stat-card">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Years active</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 
-<!-- ================= PROPERTIES (if user authenticated) ================= -->
+
+<!-- ═══════════════════ RECOMMENDED ═══════════════════ -->
 {% load static %}
-
 {% if user.is_authenticated and recommended_properties %}
-<section class="properties">
-    <div class="container">
-        <h2 class="section-title">
-            Recommended for You
-        </h2>
-
-        <div class="properties-grid">
-            {% for p in recommended_properties %}
-                <div class="property-card" onclick="toggleDetails({{ p.id }})">
-
-                    {% with p.media.all|first as media %}
-                        {% if media and media.media_type == "image" %}
-                            <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
-                        {% else %}
-                            <img src="{% static 'images/default-property.jpg' %}" class="property-image">
-                        {% endif %}
-                    {% endwith %}
-
-                    <div class="property-info">
-                        <h3>{{ p.title }}</h3>
-                        <p>{{ p.city_area }}</p>
-                        <p class="rent">₹ {{ p.rent }}</p>
-                    </div>
-
-                    <div class="property-details" id="details-{{ p.id }}" style="display:none;">
-                        <p>{{ p.description }}</p>
-
-                        <div class="property-media">
-                            {% for media in p.media.all %}
-                                {% if media.media_type == "image" %}
-                                    <img src="{{ media.file.url }}" class="detail-image">
-                                {% else %}
-                                    <video controls class="detail-video">
-                                        <source src="{{ media.file.url }}">
-                                    </video>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                </div>
-            {% endfor %}
-        </div>
+<section class="recommended-section reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-kicker">Curated for you</div>
+      <h2 class="section-title">Recommended</h2>
+      <p class="section-subtitle">Based on your preferences</p>
     </div>
+    <div class="properties-grid stagger" id="recommendedGrid">
+      {% for p in recommended_properties %}
+      <div class="property-card" onclick="toggleDetails({{ p.id }},this)">
+        <div class="property-image-wrap">
+          {% with p.media.all|first as media %}
+            {% if media and media.media_type == "image" %}
+              <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
+            {% else %}
+              <img src="{% static 'images/default-property.jpg' %}" alt="Property" class="property-image">
+            {% endif %}
+          {% endwith %}
+          <span class="property-badge">Recommended</span>
+        </div>
+        <div class="property-info">
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.city_area }}</p>
+          <p class="rent">₹ {{ p.rent }}</p>
+        </div>
+        <div class="property-footer">
+          <span class="property-cta">View details →</span>
+        </div>
+        <div class="property-details" id="details-{{ p.id }}" style="display:none">
+          <p>{{ p.description }}</p>
+          <div class="property-media">
+            {% for m in p.media.all %}
+              {% if m.media_type == "image" %}
+                <img src="{{ m.file.url }}" class="detail-image">
+              {% else %}
+                <video controls class="detail-video"><source src="{{ m.file.url }}"></video>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 {% endif %}
 
-<!-- ================= PROPERTIES (always visible) ================= -->
-<section id="propertiesSection" class="properties">
-    <div class="container">
-        <h2 class="section-title">
-            All Available Properties
-        </h2>
 
-        <div class="properties-grid">
-            {% for p in properties %}
-                <div class="property-card" onclick="toggleDetails({{ p.id }})">
-
-                    {% with p.media.all|first as media %}
-                        {% if media and media.media_type == "image" %}
-                            <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
-                        {% else %}
-                            <img src="{% static 'images/default-property.jpg' %}" class="property-image">
-                        {% endif %}
-                    {% endwith %}
-
-                    <div class="property-info">
-                        <h3>{{ p.title }}</h3>
-                        <p>{{ p.city_area }}</p>
-                        <p class="rent">₹ {{ p.rent }}</p>
-                    </div>
-
-                    <div class="property-details" id="details-{{ p.id }}" style="display:none;">
-                        <p>{{ p.description }}</p>
-
-                        <div class="property-media">
-                            {% for media in p.media.all %}
-                                {% if media.media_type == "image" %}
-                                    <img src="{{ media.file.url }}" class="detail-image">
-                                {% else %}
-                                    <video controls class="detail-video">
-                                        <source src="{{ media.file.url }}">
-                                    </video>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                </div>
-            {% empty %}
-                <p class="empty-state">
-                    No properties available right now.
-                </p>
+<!-- ═══════════════════ ALL PROPERTIES ═══════════════════ -->
+<section id="propertiesSection" class="properties reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-kicker">Explore</div>
+      <h2 class="section-title">Available Properties</h2>
+      <p class="section-subtitle">Browse our full collection</p>
+    </div>
+    <div class="properties-grid stagger">
+      {% for p in properties %}
+      <div class="property-card" onclick="toggleDetails({{ p.id }},this)">
+        <div class="property-image-wrap">
+          {% with p.media.all|first as media %}
+            {% if media and media.media_type == "image" %}
+              <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
+            {% else %}
+              <img src="{% static 'images/default-property.jpg' %}" alt="Property" class="property-image">
+            {% endif %}
+          {% endwith %}
+          <span class="property-badge">Available</span>
+        </div>
+        <div class="property-info">
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.city_area }}</p>
+          <p class="rent">₹ {{ p.rent }}</p>
+        </div>
+        <div class="property-footer">
+          <span class="property-cta">View details →</span>
+        </div>
+        <div class="property-details" id="details-{{ p.id }}" style="display:none">
+          <p>{{ p.description }}</p>
+          <div class="property-media">
+            {% for m in p.media.all %}
+              {% if m.media_type == "image" %}
+                <img src="{{ m.file.url }}" class="detail-image">
+              {% else %}
+                <video controls class="detail-video"><source src="{{ m.file.url }}"></video>
+              {% endif %}
             {% endfor %}
+          </div>
         </div>
+      </div>
+      {% empty %}
+        <p class="empty-state">No properties listed yet.</p>
+      {% endfor %}
     </div>
+  </div>
 </section>
 
 
-
-
-
-<!-- ================= USERS (ADMIN) ================= -->
+<!-- ═══════════════════ ADMIN USERS ═══════════════════ -->
 <section id="usersSection" class="properties" style="display:none">
-    <div class="container">
-        <h2 class="section-title">User Management</h2>
-        <div id="usersGrid" class="properties-grid"></div>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-kicker">Admin</div>
+      <h2 class="section-title">User Management</h2>
     </div>
+    <div id="usersGrid" class="properties-grid"></div>
+  </div>
 </section>
 
-<!-- ================= CONTACT ================= -->
-<section class="contact">
-    <div class="container">
-        <h2 class="section-title">Get In Touch</h2>
-        <p class="section-subtitle">We’re here to help</p>
 
-        <div class="contact-grid">
-            <div class="contact-card">
-                <div class="contact-icon">📞</div>
-                <p id="contactPhone">+91 8605452622</p>
-                <button onclick="makePhoneCall()">Call</button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">💬</div>
-                <p id="whatsappNumber">+91 8605452622</p>
-                <button onclick="openWhatsApp()">WhatsApp</button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">📧</div>
-                <p id="contactEmail">shivtejrealestate@gmail.com</p>
-                <button onclick="sendEmail()">Email</button>
-            </div>
-        </div>
+<!-- ═══════════════════ CONTACT ═══════════════════ -->
+<section class="contact reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-kicker">Let's talk</div>
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="section-subtitle">Our team responds within a few hours</p>
     </div>
+    <div class="contact-grid stagger">
+      <div class="contact-card">
+        <span class="contact-icon">📞</span>
+        <p id="contactPhone">+91 86054 52622</p>
+        <button onclick="makePhoneCall()">Call Now</button>
+      </div>
+      <div class="contact-card">
+        <span class="contact-icon">💬</span>
+        <p id="whatsappNumber">+91 86054 52622</p>
+        <button onclick="openWhatsApp()">WhatsApp</button>
+      </div>
+      <div class="contact-card">
+        <span class="contact-icon">✉</span>
+        <p id="contactEmail">shivtejrealestate@gmail.com</p>
+        <button onclick="sendEmail()">Email Us</button>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- ================= FOOTER ================= -->
-<div class="footer" style="text-align:center; padding:10px; font-size:12px; color:#666;">
-    <p>
-        Developed & maintained by Pratik Ingle & Mihir Dolas  
-        <br>
-        ☕ Powered by chai, samosa, and questionable life choices
-    </p>
-</div>
 
-<!-- ================= JS ================= -->
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="footer">
+  <p>
+    Developed &amp; maintained by Pratik Ingle &amp; Mihir Dolas
+    <br>☕ Powered by chai, samosa, and questionable life choices
+  </p>
+</footer>
+
+
+<!-- ═══════════════════ JS ═══════════════════ -->
 <script src="{% static 'home.js' %}"></script>
 <script>
-function toggleDetails(id) {
-    const el = document.getElementById("details-" + id);
-    el.style.display = el.style.display === "none" ? "block" : "none";
+/* ── Sticky header shadow ── */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
+
+/* ── Toggle property details ── */
+function toggleDetails(id, card) {
+  const panel = document.getElementById('details-' + id);
+  const cta   = card.querySelector('.property-cta');
+  if (!panel) return;
+  const open = panel.style.display === 'none' || !panel.style.display;
+  panel.style.display = open ? 'block' : 'none';
+  if (cta) cta.textContent = open ? 'Close ✕' : 'View details →';
 }
+
+/* ── Scroll reveal ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── Staggered card entrance ── */
+const cardIO = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const parent = entry.target;
+      Array.from(parent.children).forEach((child, i) => {
+        setTimeout(() => {
+          child.style.opacity   = '1';
+          child.style.transform = 'none';
+        }, i * 90);
+      });
+      cardIO.unobserve(parent);
+    }
+  });
+}, { threshold: 0.05 });
+
+document.querySelectorAll('.stagger').forEach(el => cardIO.observe(el));
 </script>
 
 </body>

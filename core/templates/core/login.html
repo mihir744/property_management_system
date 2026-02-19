@@ -1,52 +1,284 @@
-<h2>Login</h2>
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-</form>
-<p onclick="toggleReset()" style="cursor:pointer;">Forgot password?</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login — Shivtej Real Estate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0d0d;--ink-60:rgba(13,13,13,.6);--ink-30:rgba(13,13,13,.3);
+  --ink-10:rgba(13,13,13,.06);--paper:#f7f6f3;--white:#fff;
+  --accent:#2563eb;--line:rgba(13,13,13,.1);--ease:cubic-bezier(.22,1,.36,1);
+}
+html,body{height:100%}
+body{
+  font-family:'Outfit',sans-serif;
+  min-height:100vh;
+  background:var(--paper);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  -webkit-font-smoothing:antialiased;
+}
 
-<div id="resetBox" style="display:none;">
-    <input type="text" id="resetUsername" placeholder="Enter username">
-    <button onclick="sendReset()">Request reset</button>
-    <p id="resetMsg"></p>
+/* ── LEFT PANEL ── */
+.panel-left{
+  background:var(--ink);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:56px 64px;
+  min-height:100vh;
+}
+/* dot texture */
+.panel-left::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+.panel-left::after{
+  content:'';position:absolute;
+  bottom:-160px;right:-160px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 65%);
+  pointer-events:none;
+}
+.panel-logo{
+  display:flex;align-items:center;gap:14px;
+  text-decoration:none;position:relative;
+}
+.panel-logo-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-weight:600;color:var(--ink);
+  letter-spacing:.3px;
+}
+.panel-logo-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:400;color:var(--white);
+  letter-spacing:-.2px;
+}
+.panel-headline{
+  position:relative;
+}
+.panel-headline h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(40px,4vw,64px);
+  font-weight:300;color:var(--white);
+  line-height:1.05;letter-spacing:-1.5px;
+  margin-bottom:20px;
+}
+.panel-headline h2 em{font-style:italic;color:rgba(255,255,255,.5);}
+.panel-headline p{
+  font-size:15px;color:rgba(255,255,255,.45);
+  font-weight:300;line-height:1.7;max-width:340px;
+}
+.panel-stat{
+  display:flex;gap:40px;position:relative;
+}
+.ps-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px;font-weight:300;color:var(--white);letter-spacing:-1px;
+}
+.ps-label{font-size:12px;color:rgba(255,255,255,.35);margin-top:2px;}
+
+/* ── RIGHT PANEL ── */
+.panel-right{
+  background:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  padding:56px 48px;
+  min-height:100vh;
+}
+.auth-form-wrap{width:100%;max-width:380px;}
+.auth-form-wrap h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px;font-weight:400;
+  color:var(--ink);letter-spacing:-1px;
+  margin-bottom:6px;
+}
+.auth-desc{font-size:14px;color:var(--ink-60);font-weight:300;margin-bottom:40px;}
+.alert{
+  padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;
+  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);color:#b91c1c;
+}
+.alert-success{background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.2);color:#166534;}
+.alert-info{background:rgba(37,99,235,.06);border-color:rgba(37,99,235,.2);color:var(--accent);}
+
+.form-field{margin-bottom:20px;}
+.form-field label{
+  display:block;font-size:12px;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--ink-60);margin-bottom:8px;
+}
+.form-field input{
+  width:100%;padding:13px 16px;
+  border:1px solid var(--line);border-radius:12px;
+  background:var(--paper);
+  font-family:'Outfit',sans-serif;font-size:15px;color:var(--ink);
+  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.form-field input::placeholder{color:var(--ink-30);}
+.form-field input:focus{
+  border-color:var(--accent);background:var(--white);
+  box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+.forgot{
+  display:block;text-align:right;font-size:13px;
+  color:var(--ink-60);cursor:pointer;
+  margin-top:-12px;margin-bottom:20px;
+  transition:color .2s;
+}
+.forgot:hover{color:var(--accent);}
+
+.btn-submit{
+  width:100%;padding:15px;
+  background:var(--ink);color:var(--white);
+  border:none;border-radius:12px;
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;
+  cursor:pointer;letter-spacing:.2px;
+  transition:background .2s,transform .2s var(--ease),box-shadow .2s;
+}
+.btn-submit:hover{
+  background:#1a1a1a;transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+}
+
+.auth-switch{
+  text-align:center;margin-top:28px;
+  font-size:14px;color:var(--ink-60);
+}
+.auth-switch a{color:var(--accent);text-decoration:none;font-weight:500;}
+.auth-switch a:hover{text-decoration:underline;}
+
+/* Reset box */
+.reset-panel{
+  margin-top:28px;padding:22px;
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:14px;
+  animation:fadeIn .3s var(--ease);
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.reset-panel h3{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:14px;}
+.reset-row{display:flex;gap:8px;}
+.reset-row input{
+  flex:1;padding:12px 14px;
+  border:1px solid var(--line);border-radius:10px;
+  background:var(--white);
+  font-family:'Outfit',sans-serif;font-size:14px;color:var(--ink);outline:none;
+  transition:border-color .2s;
+}
+.reset-row input:focus{border-color:var(--accent);}
+.btn-reset{
+  background:var(--ink-10);border:1px solid var(--line);
+  padding:12px 16px;border-radius:10px;
+  font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;
+  color:var(--ink);cursor:pointer;white-space:nowrap;
+  transition:background .2s;
+}
+.btn-reset:hover{background:var(--ink);color:var(--white);border-color:var(--ink);}
+#resetMsg{font-size:13px;color:var(--ink-60);margin-top:10px;}
+
+/* Responsive */
+@media(max-width:680px){
+  body{grid-template-columns:1fr;}
+  .panel-left{display:none;}
+  .panel-right{padding:40px 28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LEFT -->
+<div class="panel-left">
+  <a href="/" class="panel-logo">
+    <div class="panel-logo-icon">SR</div>
+    <span class="panel-logo-text">Shivtej Real Estate</span>
+  </a>
+  <div class="panel-headline">
+    <h2>The right home<br>is <em>waiting</em><br>for you.</h2>
+    <p>Thousands of verified properties across Pune — curated by people who care about where you live.</p>
+  </div>
+  <div class="panel-stat">
+    <div>
+      <div class="ps-num">500+</div>
+      <div class="ps-label">Properties</div>
+    </div>
+    <div>
+      <div class="ps-num">1.2k</div>
+      <div class="ps-label">Happy clients</div>
+    </div>
+    <div>
+      <div class="ps-num">10+</div>
+      <div class="ps-label">Years</div>
+    </div>
+  </div>
 </div>
 
+<!-- RIGHT -->
+<div class="panel-right">
+  <div class="auth-form-wrap">
+    <h1>Welcome back</h1>
+    <p class="auth-desc">Sign in to your account to continue.</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-field">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Your username" required autocomplete="username">
+      </div>
+      <div class="form-field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Your password" required autocomplete="current-password">
+      </div>
+      <span class="forgot" onclick="toggleReset()">Forgot password?</span>
+      <button type="submit" class="btn-submit">Sign In</button>
+    </form>
+
+    <div id="resetBox" style="display:none" class="reset-panel">
+      <h3>Reset your password</h3>
+      <div class="reset-row">
+        <input type="text" id="resetUsername" placeholder="Enter your username">
+        <button class="btn-reset" onclick="sendReset()">Request</button>
+      </div>
+      <p id="resetMsg"></p>
+    </div>
+
+    <p class="auth-switch">
+      Don't have an account? <a href="{% url 'signup' %}">Sign up free</a>
+    </p>
+  </div>
+</div>
 
 <script>
-function toggleReset() {
-    document.getElementById("resetBox").style.display = "block";
+function toggleReset(){
+  var b=document.getElementById('resetBox');
+  b.style.display=b.style.display==='none'?'block':'none';
 }
-
-function sendReset() {
-    const username = document.getElementById("resetUsername").value;
-    const msg = document.getElementById("resetMsg");
-
-    fetch("{% url 'ajax_reset_request' %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "username=" + username
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "ok") {
-            msg.innerText = "Reset request sent. Contact admin.";
-            msg.style.color = "green";
-        } else {
-            msg.innerText = data.msg;
-            msg.style.color = "red";
-        }
-    });
+function sendReset(){
+  var u=document.getElementById('resetUsername').value;
+  var m=document.getElementById('resetMsg');
+  fetch("{% url 'ajax_reset_request' %}",{
+    method:'POST',
+    headers:{'X-CSRFToken':'{{ csrf_token }}','Content-Type':'application/x-www-form-urlencoded'},
+    body:'username='+encodeURIComponent(u)
+  }).then(r=>r.json()).then(d=>{
+    if(d.status==='ok'){m.style.color='#166534';m.innerText='Reset request sent. Contact admin.';}
+    else{m.style.color='#b91c1c';m.innerText=d.msg;}
+  });
 }
 </script>
+</body>
+</html>

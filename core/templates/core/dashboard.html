@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+    <meta charset = "UTF-8">
+    <title> Dashboard - shivtej real estate</title>
+    <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <button class="mob-btn" onclick="togglesidebar()">☰</button>
+        <div class = "sb-overlay" id = "sbOverlay" onclick="togglesidebar()"></div>
+
+        <aside class="sidebar" id = "sidebar">
+            <a href ="/" class = "sb-logo">
+                <div class = "sb-logo-icon">SB</div>
+                <span class = "sb-logo-text">Shivtej<br>Real Estate</span>
+            </a>
+            <div class = "sb-user">
+                <div class = "sb-avatar"> UserName will be here</div>
+                <div>
+                    <div class = "sb-uname">username</div>
+                    <div class = "sb-utag" >Member</div>
+                </div>
+            </div>
+
+            <nav class ="sb-nav">
+                <div class = "sb-label">Main</div>
+                <button class = "sb-link active" onclick="go('overview', 'this')">
+                    <span class = "si">⊞</span> Overview
+                </button>
+                <button class="sb-link" onclick="go('recommended', 'this')">
+                    <span class ="si">✦</span>Recommended
+                    {% if recommended_properties %}<span class = "badge">{{ recommended_properties|length }}</span>{% endif %}
+                </button>
+                <button class = "sb-link" onclick="go('browse', 'this')">
+                    <span class = "si">♡</span> Saved
+                    <span class = "badge" id = "savedCount">0</span>
+                </button>
+                
+
+            </nav>
+        </aside>
+
+    </body>
+</html>

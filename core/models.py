@@ -10,4 +10,4 @@ class PasswordResetRequest (models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.created_at}"
 # Create your models here.
-#thinking to create new view for the site
+#removing old models 

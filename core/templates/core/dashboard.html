@@ -1,47 +1,510 @@
 <!DOCTYPE html>
-<html lang = "en">
-    <head>
-    <meta charset = "UTF-8">
-    <title> Dashboard - shivtej real estate</title>
-    <meta name = "viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard — Shivtej Real Estate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% load static %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <button class="mob-btn" onclick="togglesidebar()">☰</button>
-        <div class = "sb-overlay" id = "sbOverlay" onclick="togglesidebar()"></div>
 
-        <aside class="sidebar" id = "sidebar">
-            <a href ="/" class = "sb-logo">
-                <div class = "sb-logo-icon">SB</div>
-                <span class = "sb-logo-text">Shivtej<br>Real Estate</span>
-            </a>
-            <div class = "sb-user">
-                <div class = "sb-avatar"> UserName will be here</div>
-                <div>
-                    <div class = "sb-uname">username</div>
-                    <div class = "sb-utag" >Member</div>
-                </div>
+  <link rel="stylesheet" href="{%static dashboard.css}%">
+</head>
+<body>
+
+  <!-- Mobile sidebar toggle (hidden on desktop via CSS) -->
+  <button class="mobile-menu-button" onclick="toggleMobileSidebar()" aria-label="Open navigation">
+    ☰
+  </button>
+
+  <!-- Overlay behind open sidebar on mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+
+  <!-- ════════════════════════════════
+       SIDEBAR
+       ════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+    <a href="/" class="sidebar-logo" aria-label="Homepage">
+      <div class="sidebar-logo-icon" aria-hidden="true">SR</div>
+      <span class="sidebar-logo-text">Shivtej<br>Real Estate</span>
+    </a>
+
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" aria-hidden="true">
+        {{ user.username|first|upper }}
+      </div>
+      <div>
+        <div class="sidebar-user-name">{{ user.username }}</div>
+        <div class="sidebar-user-tag">Member</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Dashboard sections">
+
+      <div class="sidebar-nav-section-label">Main</div>
+
+      <button class="sidebar-nav-link is-active" data-section="overview"
+              onclick="navigateToSection('overview', this)">
+        <span class="nav-icon" aria-hidden="true">⊞</span> Overview
+      </button>
+
+      <button class="sidebar-nav-link" data-section="recommended"
+              onclick="navigateToSection('recommended', this)">
+        <span class="nav-icon" aria-hidden="true">✦</span> Recommended
+        {% if recommended_properties %}
+          <span class="nav-badge">{{ recommended_properties|length }}</span>
+        {% endif %}
+      </button>
+
+      <button class="sidebar-nav-link" data-section="browse"
+              onclick="navigateToSection('browse', this)">
+        <span class="nav-icon" aria-hidden="true">⊡</span> Browse All
+      </button>
+
+      <button class="sidebar-nav-link" data-section="saved"
+              onclick="navigateToSection('saved', this)">
+        <span class="nav-icon" aria-hidden="true">♡</span> Saved
+        <span class="nav-badge" id="saved-nav-badge">0</span>
+      </button>
+
+      <div class="sidebar-nav-section-label">Account</div>
+
+      <button class="sidebar-nav-link" data-section="preferences"
+              onclick="navigateToSection('preferences', this)">
+        <span class="nav-icon" aria-hidden="true">◎</span> My Preferences
+      </button>
+
+      <button class="sidebar-nav-link" data-section="activity"
+              onclick="navigateToSection('activity', this)">
+        <span class="nav-icon" aria-hidden="true">◷</span> Activity
+      </button>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="{% url 'logout' %}" class="sidebar-nav-link logout-link">
+        <span class="nav-icon" aria-hidden="true">→</span> Log out
+      </a>
+    </div>
+
+  </aside>
+
+
+  <!-- ════════════════════════════════
+       MAIN WRAPPER
+       ════════════════════════════════ -->
+  <div class="main-wrapper">
+
+    <header class="topbar">
+      <h1 class="topbar-page-title" id="topbar-page-title">Overview</h1>
+      <div class="topbar-actions">
+        <div class="topbar-search">
+          <span class="topbar-search-icon" aria-hidden="true">🔍</span>
+          <input type="search" class="topbar-search-input"
+                 placeholder="Search properties…" aria-label="Search properties"
+                 oninput="handleSearchInput(this.value)">
+        </div>
+        <div class="topbar-bell" role="button" aria-label="Notifications">
+          🔔
+          <span class="topbar-bell-dot" aria-hidden="true"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+
+      <!-- ────────────────────────────
+           OVERVIEW
+           ──────────────────────────── -->
+      <section class="dashboard-section is-active" id="section-overview">
+
+        <div class="greeting-row">
+          <div>
+            <p class="greeting-time-label" id="greeting-time-label">Good morning</p>
+            <h2 class="greeting-headline">
+              {{ user.first_name|default:user.username }},<br><em>welcome back.</em>
+            </h2>
+          </div>
+          <p class="greeting-date" id="current-date-display"></p>
+        </div>
+
+        <div class="stat-cards-row">
+          <div class="stat-card stat-card--dark">
+            <p class="stat-card-label">Properties</p>
+            <p class="stat-card-value">{{ properties|length }}</p>
+            <p class="stat-card-sublabel">Total available</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-card-label">Recommended</p>
+            <p class="stat-card-value">{{ recommended_properties|length|default:"0" }}</p>
+            <p class="stat-card-sublabel">Matched for you</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-card-label">Saved</p>
+            <p class="stat-card-value" id="stat-saved-count">0</p>
+            <p class="stat-card-sublabel">In your wishlist</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-card-label">Viewed</p>
+            <p class="stat-card-value" id="stat-viewed-count">0</p>
+            <p class="stat-card-sublabel">This session</p>
+          </div>
+        </div>
+
+        {% if recommended_properties %}
+        <div class="section-header">
+          <div class="section-header-left">
+            <p class="section-kicker">For you</p>
+            <h3 class="section-title">Recommended</h3>
+          </div>
+          <button class="section-see-all-button"
+                  onclick="navigateToSection('recommended', document.querySelector('[data-section=recommended]'))">
+            See all →
+          </button>
+        </div>
+
+        <div class="property-grid">
+          {% for property in recommended_properties|slice:":3" %}
+          <article class="property-card" onclick="openModal({{ property.id }})" aria-label="{{ property.title }}">
+            <div class="property-card-image-wrapper">
+              {% with property.media.all|first as first_media %}
+                {% if first_media and first_media.media_type == "image" %}
+                  <img src="{{ first_media.file.url }}" class="property-card-image" alt="{{ property.title }}" loading="lazy">
+                {% else %}
+                  <div class="property-card-image-placeholder" aria-hidden="true">🏠</div>
+                {% endif %}
+              {% endwith %}
+              <span class="property-type-badge">Recommended</span>
+              <button class="property-save-button" data-property-id="{{ property.id }}"
+                      onclick="toggleSave(event, {{ property.id }})" aria-label="Save {{ property.title }}">♡</button>
             </div>
+            <div class="property-card-body">
+              <h4 class="property-card-title">{{ property.title }}</h4>
+              <p class="property-card-location">📍 {{ property.city_area }}</p>
+              <p class="property-card-price">₹ {{ property.rent }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        {% endif %}
 
-            <nav class ="sb-nav">
-                <div class = "sb-label">Main</div>
-                <button class = "sb-link active" onclick="go('overview', 'this')">
-                    <span class = "si">⊞</span> Overview
-                </button>
-                <button class="sb-link" onclick="go('recommended', 'this')">
-                    <span class ="si">✦</span>Recommended
-                    {% if recommended_properties %}<span class = "badge">{{ recommended_properties|length }}</span>{% endif %}
-                </button>
-                <button class = "sb-link" onclick="go('browse', 'this')">
-                    <span class = "si">♡</span> Saved
-                    <span class = "badge" id = "savedCount">0</span>
-                </button>
-                
+      </section>
 
-            </nav>
-        </aside>
 
-    </body>
+      <!-- ────────────────────────────
+           RECOMMENDED
+           ──────────────────────────── -->
+      <section class="dashboard-section" id="section-recommended">
+
+        <div class="section-header">
+          <div class="section-header-left">
+            <p class="section-kicker">Curated</p>
+            <h2 class="section-title">Recommended for You</h2>
+          </div>
+        </div>
+
+        <div class="property-grid">
+          {% for property in recommended_properties %}
+          <article class="property-card" onclick="openModal({{ property.id }})" aria-label="{{ property.title }}">
+            <div class="property-card-image-wrapper">
+              {% with property.media.all|first as first_media %}
+                {% if first_media and first_media.media_type == "image" %}
+                  <img src="{{ first_media.file.url }}" class="property-card-image" alt="{{ property.title }}" loading="lazy">
+                {% else %}
+                  <div class="property-card-image-placeholder" aria-hidden="true">🏠</div>
+                {% endif %}
+              {% endwith %}
+              <span class="property-type-badge">Recommended</span>
+              <button class="property-save-button" data-property-id="{{ property.id }}"
+                      onclick="toggleSave(event, {{ property.id }})" aria-label="Save {{ property.title }}">♡</button>
+            </div>
+            <div class="property-card-body">
+              <h3 class="property-card-title">{{ property.title }}</h3>
+              <p class="property-card-location">📍 {{ property.city_area }}</p>
+              <p class="property-card-price">₹ {{ property.rent }}</p>
+            </div>
+          </article>
+          {% empty %}
+          <p style="color: var(--color-ink-40); font-size: 15px; padding: 48px 0">
+            Set your preferences to get personalised recommendations.
+          </p>
+          {% endfor %}
+        </div>
+
+      </section>
+
+
+      <!-- ────────────────────────────
+           BROWSE ALL
+           ──────────────────────────── -->
+      <section class="dashboard-section" id="section-browse">
+
+        <div class="section-header">
+          <div class="section-header-left">
+            <p class="section-kicker">Explore</p>
+            <h2 class="section-title">All Properties</h2>
+          </div>
+        </div>
+
+        <div class="property-grid" id="browse-properties-grid">
+          {% for property in properties %}
+          <article class="property-card" onclick="openModal({{ property.id }})"
+                   data-title="{{ property.title|lower }}" data-area="{{ property.city_area|lower }}"
+                   aria-label="{{ property.title }}">
+            <div class="property-card-image-wrapper">
+              {% with property.media.all|first as first_media %}
+                {% if first_media and first_media.media_type == "image" %}
+                  <img src="{{ first_media.file.url }}" class="property-card-image" alt="{{ property.title }}" loading="lazy">
+                {% else %}
+                  <div class="property-card-image-placeholder" aria-hidden="true">🏠</div>
+                {% endif %}
+              {% endwith %}
+              <span class="property-type-badge">Available</span>
+              <button class="property-save-button" data-property-id="{{ property.id }}"
+                      onclick="toggleSave(event, {{ property.id }})" aria-label="Save {{ property.title }}">♡</button>
+            </div>
+            <div class="property-card-body">
+              <h3 class="property-card-title">{{ property.title }}</h3>
+              <p class="property-card-location">📍 {{ property.city_area }}</p>
+              <p class="property-card-price">₹ {{ property.rent }}</p>
+            </div>
+          </article>
+          {% empty %}
+          <p style="color: var(--color-ink-40); font-size: 15px; padding: 48px 0">
+            No properties available right now.
+          </p>
+          {% endfor %}
+        </div>
+
+      </section>
+
+
+      <!-- ────────────────────────────
+           SAVED / WISHLIST
+           ──────────────────────────── -->
+      <section class="dashboard-section" id="section-saved">
+
+        <div class="section-header">
+          <div class="section-header-left">
+            <p class="section-kicker">Wishlist</p>
+            <h2 class="section-title">Saved Properties</h2>
+          </div>
+        </div>
+
+        <div class="property-grid" id="saved-properties-grid">
+          <!-- Built dynamically by dashboard.js → renderSavedGrid() -->
+        </div>
+
+        <div class="saved-empty-state" id="saved-empty-state">
+          <div class="saved-empty-icon" aria-hidden="true">♡</div>
+          <h3 class="saved-empty-title">Nothing saved yet</h3>
+          <p class="saved-empty-description">Tap the heart on any property to save it here.</p>
+        </div>
+
+      </section>
+
+
+      <!-- ────────────────────────────
+           MY PREFERENCES
+           ──────────────────────────── -->
+      <section class="dashboard-section" id="section-preferences">
+
+        <div class="section-header">
+          <div class="section-header-left">
+            <p class="section-kicker">Account</p>
+            <h2 class="section-title">My Preferences</h2>
+          </div>
+          <a href="{% url 'preferences' %}">
+            <button class="section-see-all-button">Edit →</button>
+          </a>
+        </div>
+
+        <div class="preferences-grid">
+
+          <div class="preference-card">
+            <p class="preference-card-label">Property Preferences</p>
+            {% if user_preferences %}
+              <div class="preference-row">
+                <span class="preference-row-key">Type</span>
+                <span class="preference-row-value">{{ user_preferences.property_type|default:"Any" }}</span>
+              </div>
+              <div class="preference-row">
+                <span class="preference-row-key">Budget</span>
+                <span class="preference-row-value">{{ user_preferences.budget_range|default:"Not set" }}</span>
+              </div>
+              <div class="preference-row">
+                <span class="preference-row-key">Location</span>
+                <span class="preference-row-value">{{ user_preferences.preferred_location|default:"Any" }}</span>
+              </div>
+              <div class="preference-row">
+                <span class="preference-row-key">BHK</span>
+                <span class="preference-row-value">{{ user_preferences.bhk|default:"Any" }}</span>
+              </div>
+            {% else %}
+              <p style="font-size: 13.5px; color: var(--color-ink-40); padding: 16px 0">
+                No preferences set yet.
+              </p>
+            {% endif %}
+            <a href="{% url 'preferences' %}">
+              <button class="preference-edit-button">Update Preferences</button>
+            </a>
+          </div>
+
+          <div class="preference-card">
+            <p class="preference-card-label">Account Info</p>
+            <div class="preference-row">
+              <span class="preference-row-key">Username</span>
+              <span class="preference-row-value">{{ user.username }}</span>
+            </div>
+            <div class="preference-row">
+              <span class="preference-row-key">Email</span>
+              <span class="preference-row-value">{{ user.email|default:"Not set" }}</span>
+            </div>
+            <div class="preference-row">
+              <span class="preference-row-key">Member since</span>
+              <span class="preference-row-value">{{ user.date_joined|date:"M Y" }}</span>
+            </div>
+            <div class="preference-row">
+              <span class="preference-row-key">Status</span>
+              <span class="preference-row-value">
+                <span class="preference-tag">Active</span>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ────────────────────────────
+           ACTIVITY LOG
+           ──────────────────────────── -->
+      <section class="dashboard-section" id="section-activity">
+
+        <div class="section-header">
+          <div class="section-header-left">
+            <p class="section-kicker">History</p>
+            <h2 class="section-title">Recent Activity</h2>
+          </div>
+          <button class="section-see-all-button" onclick="clearActivityLog()">
+            Clear →
+          </button>
+        </div>
+
+        <div class="activity-container">
+          <div class="activity-list" id="activity-list">
+            <!-- Built dynamically by dashboard.js → renderActivityLog() -->
+          </div>
+        </div>
+
+      </section>
+
+
+    </main>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       PROPERTY MODAL
+       ════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-overlay"
+       onclick="handleOverlayClick(event)"
+       role="dialog" aria-modal="true" aria-labelledby="modal-property-title">
+
+    <div class="modal-dialog">
+
+      <div class="modal-gallery">
+        <img src="" alt="Property photo"
+             class="modal-gallery-main-image" id="modal-gallery-main-image">
+
+        <span class="modal-gallery-type-badge" id="modal-gallery-type-badge">Available</span>
+
+        <button class="modal-close-button" onclick="closeModal()" aria-label="Close">✕</button>
+
+        <div class="modal-gallery-image-counter" id="modal-gallery-counter">1 / 1</div>
+
+        <div class="modal-gallery-nav-buttons">
+          <button class="modal-gallery-nav-button" onclick="goToPrevImage()" aria-label="Previous image">←</button>
+          <button class="modal-gallery-nav-button" onclick="goToNextImage()" aria-label="Next image">→</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="modal-header-row">
+          <div>
+            <h2 class="modal-property-title" id="modal-property-title">—</h2>
+            <p class="modal-property-location" id="modal-property-location">—</p>
+          </div>
+          <div class="modal-price-block">
+            <p class="modal-price-value" id="modal-price-value">₹ —</p>
+            <p class="modal-price-unit">per month</p>
+          </div>
+        </div>
+
+        <div class="modal-feature-chips" id="modal-feature-chips"></div>
+
+        <p class="modal-description-label">Description</p>
+        <p class="modal-description-text" id="modal-description-text">—</p>
+
+        <div class="modal-thumbnail-strip" id="modal-thumbnail-strip"></div>
+
+        <div class="modal-action-row">
+          <button class="modal-call-button" onclick="callAgent()">📞 Call Agent</button>
+          <button class="modal-whatsapp-button" onclick="openWhatsApp()">💬 WhatsApp</button>
+          <button class="modal-save-button" id="modal-save-button"
+                  onclick="toggleSaveFromModal()" aria-label="Save property">♡</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       DATA BRIDGE
+       Django context → JavaScript
+       ════════════════════════════════ -->
+  <script>
+    const AGENT_PHONE = "+918605452622";
+
+    /* Build a property lookup map so JS can find any property by ID instantly. */
+    const PROPERTY_DATA = {};
+
+    {% for property in properties %}
+    PROPERTY_DATA[{{ property.id }}] = {
+      id:          {{ property.id }},
+      title:       "{{ property.title|escapejs }}",
+      area:        "{{ property.city_area|escapejs }}",
+      rent:        "{{ property.rent|escapejs }}",
+      description: "{{ property.description|escapejs }}",
+      type:        "{{ property.property_type|default:'Residential'|escapejs }}",
+      badge:       "Available",
+      images: [{% for media in property.media.all %}{% if media.media_type == "image" %}"{{ media.file.url }}",{% endif %}{% endfor %}],
+    };
+    {% endfor %}
+
+    {% for property in recommended_properties %}
+    PROPERTY_DATA[{{ property.id }}] = {
+      id:          {{ property.id }},
+      title:       "{{ property.title|escapejs }}",
+      area:        "{{ property.city_area|escapejs }}",
+      rent:        "{{ property.rent|escapejs }}",
+      description: "{{ property.description|escapejs }}",
+      type:        "{{ property.property_type|default:'Residential'|escapejs }}",
+      badge:       "Recommended",
+      images: [{% for media in property.media.all %}{% if media.media_type == "image" %}"{{ media.file.url }}",{% endif %}{% endfor %}],
+    };
+    {% endfor %}
+  </script>
+
+  <script src="dashboard.js"></script>
+
+</body>
 </html>

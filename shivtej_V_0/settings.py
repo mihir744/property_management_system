@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
     "localhost",
-    "127.0.0.1"
+    "127.0.0.1",
 ]
 
 
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'accounts',
     'core',
 ]
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -61,7 +60,6 @@ MIDDLEWARE = [
 
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 ROOT_URLCONF = 'shivtej_V_0.urls'
 
 TEMPLATES = [

@@ -131,10 +131,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-]
+
 
 LOGIN_REDIRECT_URL = '/properties'
 LOGOUT_REDIRECT_URL = '/'

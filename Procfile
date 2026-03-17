@@ -1,1 +1,1 @@
-web: gunicorn shivtej_V_0.wsgi --bind 0.0.0.0:$PORT
+web: gunicorn shivtej_V_0.wsgi:application --bind 0.0.0.0:$PORT

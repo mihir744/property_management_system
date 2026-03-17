@@ -1,0 +1,1 @@
+web: gunicorn shivtej_V_0.wsgi

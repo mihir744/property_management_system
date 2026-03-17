@@ -1,0 +1,183 @@
+/* ============================================================
+   login.css — Shivtej Real Estate
+   Login-page-specific styles only.
+   base.css must be loaded first for tokens + shared components.
+   ============================================================ */
+
+/* ── Two-column page shell ──────────────────────────────── */
+body {
+  display:              grid;
+  grid-template-columns: 1fr 1fr;
+  min-height:           100vh;
+}
+
+/* ── Left decorative panel ──────────────────────────────── */
+.auth-panel-left {
+  background:     var(--color-ink);
+  position:       relative;
+  overflow:       hidden;
+  display:        flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding:        56px 64px;
+  min-height:     100vh;
+}
+
+/* Dot-grid texture */
+.auth-panel-left::before {
+  content:          '';
+  position:         absolute;
+  inset:            0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.07) 1px, transparent 1px);
+  background-size:  32px 32px;
+  pointer-events:   none;
+}
+
+/* Glow orb */
+.auth-panel-left::after {
+  content:    '';
+  position:   absolute;
+  bottom:     -160px;
+  right:      -160px;
+  width:      500px;
+  height:     500px;
+  background: radial-gradient(circle, rgba(37,99,235,.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Headline */
+.auth-panel-left__headline {
+  position: relative; /* sits above ::before texture */
+}
+.auth-panel-left__headline h2 {
+  font-family:    var(--font-serif);
+  font-size:      clamp(40px, 4vw, 64px);
+  font-weight:    300;
+  color:          var(--color-white);
+  line-height:    1.05;
+  letter-spacing: -1.5px;
+  margin-bottom:  20px;
+}
+.auth-panel-left__headline h2 em {
+  font-style: italic;
+  color:      rgba(255, 255, 255, 0.50);
+}
+.auth-panel-left__headline p {
+  font-size:   15px;
+  color:       rgba(255, 255, 255, 0.45);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width:   340px;
+}
+
+/* Stat strip */
+.auth-panel-left__stats {
+  display:  flex;
+  gap:      40px;
+  position: relative;
+}
+.auth-stat__number {
+  font-family:    var(--font-serif);
+  font-size:      40px;
+  font-weight:    300;
+  color:          var(--color-white);
+  letter-spacing: -1px;
+}
+.auth-stat__label {
+  font-size:   12px;
+  color:       rgba(255, 255, 255, 0.35);
+  margin-top:  2px;
+}
+
+/* ── Right form panel ───────────────────────────────────── */
+.auth-panel-right {
+  background:      var(--color-white);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         56px 48px;
+  min-height:      100vh;
+}
+
+.auth-form-container {
+  width:     100%;
+  max-width: 380px;
+}
+
+.auth-form-container__title {
+  font-family:    var(--font-serif);
+  font-size:      40px;
+  font-weight:    400;
+  color:          var(--color-ink);
+  letter-spacing: -1px;
+  margin-bottom:  6px;
+}
+
+.auth-form-container__desc {
+  font-size:     14px;
+  color:         var(--color-ink-60);
+  font-weight:   300;
+  margin-bottom: 40px;
+}
+
+/* Forgot password link */
+.login-form__forgot-link {
+  display:       block;
+  text-align:    right;
+  font-size:     13px;
+  color:         var(--color-ink-60);
+  cursor:        pointer;
+  margin-top:    -12px;
+  margin-bottom: 20px;
+  transition:    color var(--transition);
+}
+.login-form__forgot-link:hover { color: var(--color-accent); }
+
+/* ── Password reset box ─────────────────────────────────── */
+.reset-box {
+  margin-top:    28px;
+  padding:       22px;
+  background:    var(--color-paper);
+  border:        1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  animation:     fadeIn 0.3s var(--ease);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+.reset-box__title {
+  font-size:     15px;
+  font-weight:   500;
+  color:         var(--color-ink);
+  margin-bottom: 14px;
+}
+.reset-box__row {
+  display: flex;
+  gap:     8px;
+}
+.reset-box__input {
+  flex:          1;
+  padding:       12px 14px;
+  border:        1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background:    var(--color-white);
+  font-family:   var(--font-sans);
+  font-size:     14px;
+  color:         var(--color-ink);
+  outline:       none;
+  transition:    border-color var(--transition);
+}
+.reset-box__input:focus { border-color: var(--color-accent); }
+.reset-box__message {
+  font-size:  13px;
+  color:      var(--color-ink-60);
+  margin-top: 10px;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 680px) {
+  body { grid-template-columns: 1fr; }
+  .auth-panel-left  { display: none; }
+  .auth-panel-right { padding: 40px 28px; }
+}

@@ -1,209 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Sign Up — Shivtej Real Estate</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#0d0d0d;--ink-60:rgba(13,13,13,.6);--ink-30:rgba(13,13,13,.3);
-  --ink-10:rgba(13,13,13,.06);--paper:#f7f6f3;--white:#fff;
-  --accent:#2563eb;--line:rgba(13,13,13,.1);--ease:cubic-bezier(.22,1,.36,1);
-}
-html,body{height:100%}
-body{
-  font-family:'Outfit',sans-serif;
-  min-height:100vh;
-  background:var(--paper);
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  -webkit-font-smoothing:antialiased;
-}
-/* ── LEFT ── */
-.panel-left{
-  background:var(--ink);
-  position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-  justify-content:space-between;
-  padding:56px 64px;
-  min-height:100vh;
-}
-.panel-left::before{
-  content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle,rgba(255,255,255,.06) 1px,transparent 1px);
-  background-size:32px 32px;
-}
-.panel-left::after{
-  content:'';position:absolute;
-  top:-120px;left:-120px;
-  width:450px;height:450px;
-  background:radial-gradient(circle,rgba(37,99,235,.14) 0%,transparent 65%);
-  pointer-events:none;
-}
-.panel-logo{display:flex;align-items:center;gap:14px;text-decoration:none;position:relative;}
-.panel-logo-icon{
-  width:44px;height:44px;border-radius:10px;background:var(--white);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ink);
-}
-.panel-logo-text{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--white);}
-.panel-headline{position:relative;}
-.panel-headline h2{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(40px,4vw,62px);font-weight:300;
-  color:var(--white);line-height:1.05;letter-spacing:-1.5px;margin-bottom:20px;
-}
-.panel-headline h2 em{font-style:italic;color:rgba(255,255,255,.45);}
-.panel-headline p{font-size:15px;color:rgba(255,255,255,.4);font-weight:300;line-height:1.7;max-width:340px;}
-.panel-steps{display:flex;flex-direction:column;gap:18px;position:relative;}
-.step{display:flex;align-items:flex-start;gap:16px;}
-.step-num{
-  width:30px;height:30px;flex-shrink:0;border-radius:8px;
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:15px;color:rgba(255,255,255,.5);
-  margin-top:2px;
-}
-.step-text{font-size:14px;color:rgba(255,255,255,.5);line-height:1.5;}
-.step-text strong{display:block;color:rgba(255,255,255,.8);font-weight:500;margin-bottom:2px;}
-
-/* ── RIGHT ── */
-.panel-right{
-  background:var(--white);
-  display:flex;align-items:center;justify-content:center;
-  padding:56px 48px;min-height:100vh;
-}
-.auth-form-wrap{width:100%;max-width:400px;}
-.auth-form-wrap h1{
-  font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:400;
-  color:var(--ink);letter-spacing:-1px;margin-bottom:6px;
-}
-.auth-desc{font-size:14px;color:var(--ink-60);font-weight:300;margin-bottom:40px;}
-.alert{
-  padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;
-  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);color:#b91c1c;
-}
-.alert-success{background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.2);color:#166534;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.form-field{margin-bottom:20px;}
-.form-field label{
-  display:block;font-size:12px;font-weight:600;
-  letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-60);margin-bottom:8px;
-}
-.form-field input{
-  width:100%;padding:13px 16px;
-  border:1px solid var(--line);border-radius:12px;background:var(--paper);
-  font-family:'Outfit',sans-serif;font-size:15px;color:var(--ink);
-  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
-}
-.form-field input::placeholder{color:var(--ink-30);}
-.form-field input:focus{
-  border-color:var(--accent);background:var(--white);
-  box-shadow:0 0 0 3px rgba(37,99,235,.1);
-}
-.btn-submit{
-  width:100%;padding:15px;background:var(--ink);color:var(--white);
-  border:none;border-radius:12px;
-  font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;
-  cursor:pointer;letter-spacing:.2px;
-  transition:background .2s,transform .2s var(--ease),box-shadow .2s;
-  margin-top:4px;
-}
-.btn-submit:hover{
-  background:#1a1a1a;transform:translateY(-2px);
-  box-shadow:0 8px 24px rgba(0,0,0,.15);
-}
-.terms{font-size:12px;color:var(--ink-30);text-align:center;margin-top:16px;line-height:1.7;}
-.auth-switch{text-align:center;margin-top:22px;font-size:14px;color:var(--ink-60);}
-.auth-switch a{color:var(--accent);text-decoration:none;font-weight:500;}
-.auth-switch a:hover{text-decoration:underline;}
-@media(max-width:680px){
-  body{grid-template-columns:1fr;}
-  .panel-left{display:none;}
-  .panel-right{padding:40px 24px;}
-  .form-row{grid-template-columns:1fr;}
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Sign Up — Shivtej Real Estate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- 1. Shared tokens + components -->
+  <link rel="stylesheet" href="{% static 'base.css' %}">
+  <!-- 2. Signup-only overrides -->
+  <link rel="stylesheet" href="{% static 'signup.css' %}">
 </head>
 <body>
 
-<!-- LEFT -->
-<div class="panel-left">
-  <a href="/" class="panel-logo">
-    <div class="panel-logo-icon">SR</div>
-    <span class="panel-logo-text">Shivtej Real Estate</span>
-  </a>
-  <div class="panel-headline">
-    <h2>Your next home<br>is <em>one step</em><br>away.</h2>
-    <p>Create your free account and get matched with properties tailored to your needs.</p>
-  </div>
-  <div class="panel-steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text">
-        <strong>Create your account</strong>
-        Quick and free. Takes under a minute.
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text">
-        <strong>Set your preferences</strong>
-        Tell us what you're looking for.
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text">
-        <strong>Get matched</strong>
-        We'll surface the right properties for you.
-      </div>
-    </div>
-  </div>
-</div>
+  <!-- ════════════════════════════
+       LEFT — Decorative panel
+       ════════════════════════════ -->
+  <div class="auth-panel-left">
 
-<!-- RIGHT -->
-<div class="panel-right">
-  <div class="auth-form-wrap">
-    <h1>Create account</h1>
-    <p class="auth-desc">Join thousands of happy homeowners and tenants.</p>
+    <!-- Logo -->
+    <a href="/" class="brand-logo">
+      <div class="brand-logo__icon">SR</div>
+      <span class="brand-logo__text">Shivtej Real Estate</span>
+    </a>
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
+    <!-- Headline copy -->
+    <div class="auth-panel-left__headline">
+      <h2>Your next home<br>is <em>one step</em><br>away.</h2>
+      <p>Create your free account and get matched with properties tailored to your needs.</p>
+    </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-row">
-        <div class="form-field">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="username" required autocomplete="username">
-        </div>
-        <div class="form-field">
-          <label>Phone</label>
-          <input type="tel" name="PhoneNo" placeholder="10-digit" pattern="[0-9]{10}" required>
+    <!-- Onboarding steps -->
+    <div class="auth-panel-left__steps">
+
+      <div class="signup-step">
+        <div class="signup-step__number">1</div>
+        <div class="signup-step__text">
+          <strong>Create your account</strong>
+          Quick and free. Takes under a minute.
         </div>
       </div>
-      <div class="form-field">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-      </div>
-      <div class="form-field">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Create a password" required autocomplete="new-password">
-      </div>
-      <button type="submit" class="btn-submit">Create Account</button>
-    </form>
 
-    <p class="terms">By signing up you agree to our Terms of Service and Privacy Policy.</p>
-    <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+      <div class="signup-step">
+        <div class="signup-step__number">2</div>
+        <div class="signup-step__text">
+          <strong>Set your preferences</strong>
+          Tell us what you're looking for.
+        </div>
+      </div>
+
+      <div class="signup-step">
+        <div class="signup-step__number">3</div>
+        <div class="signup-step__text">
+          <strong>Get matched</strong>
+          We'll surface the right properties for you.
+        </div>
+      </div>
+
+    </div>
+
   </div>
-</div>
+
+
+  <!-- ════════════════════════════
+       RIGHT — Signup form
+       ════════════════════════════ -->
+  <div class="auth-panel-right">
+    <div class="auth-form-container">
+
+      <h1 class="auth-form-container__title">Create account</h1>
+      <p class="auth-form-container__desc">Join thousands of happy homeowners and tenants.</p>
+
+      <!-- Django flash messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert--{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Signup form -->
+      <form class="signup-form" method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Username + Phone side by side -->
+        <div class="form-row--two-col">
+          <div class="form-field">
+            <label class="form-field__label" for="signup-username">Username</label>
+            <input
+              class="form-field__input"
+              id="signup-username"
+              type="text"
+              name="username"
+              placeholder="username"
+              required
+              autocomplete="username">
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="signup-phone">Phone</label>
+            <input
+              class="form-field__input"
+              id="signup-phone"
+              type="tel"
+              name="PhoneNo"
+              placeholder="10-digit"
+              pattern="[0-9]{10}"
+              required>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="signup-email">Email</label>
+          <input
+            class="form-field__input"
+            id="signup-email"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email">
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="signup-password">Password</label>
+          <input
+            class="form-field__input"
+            id="signup-password"
+            type="password"
+            name="password"
+            placeholder="Create a password"
+            required
+            autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="btn-primary">Create Account</button>
+      </form>
+
+      <p class="signup-terms">
+        By signing up you agree to our Terms of Service and Privacy Policy.
+      </p>
+
+      <!-- Switch to login -->
+      <p class="auth-switch">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+      </p>
+
+    </div>
+  </div>
 
 </body>
 </html>

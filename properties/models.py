@@ -10,16 +10,22 @@ class Property (models.Model):
         ('SR', 'Single Room'),
     ]
 
+    LISTING_TYPE_CHOICES = [
+        ('rent', 'for Rent'),
+        ('sale', 'for sale'),
+    ]
+
     title = models.CharField(max_length=200)
     description = models.TextField()
     city_area = models.CharField(max_length=100)
     property_type = models.CharField(max_length=10, choices=PROPERTY_TYPE_CHOICES)
-    rent = models.IntegerField()
-    is_available = models.BooleanField(default = True)
+    listing_type = models.CharField(max_length=10, choices=LISTING_TYPE_CHOICES, default='rent')  # ← ADD THIS
+    price = models.IntegerField(help_text="Monthly rent or Sale Price in rs")
+    is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.title} ({self.get_listing_type_display()})"
 
 class PropertyMedia(models.Model):
     IMAGE = "image"

@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import Property
-# Register your models here.
-
-from django.contrib import admin
-from .models import Property, PropertyMedia  
+from .models import Property, PropertyMedia
 
 
 class PropertyMediaInline(admin.TabularInline):
@@ -17,12 +13,14 @@ class PropertyAdmin(admin.ModelAdmin):
         "title",
         "city_area",
         "property_type",
-        "rent",
+        "listing_type",   # ← new
+        "price",
         "is_available",
         "created_at",
     )
 
     list_filter = (
+        "listing_type",   # ← new — filter sidebar: For Rent / For Sale
         "city_area",
         "property_type",
         "is_available",
@@ -35,4 +33,11 @@ class PropertyAdmin(admin.ModelAdmin):
     )
 
     ordering = ("-created_at",)
-    inlines = [PropertyMediaInline] 
+    inlines = [PropertyMediaInline]
+
+
+@admin.register(PropertyMedia)
+class PropertyMediaAdmin(admin.ModelAdmin):
+    list_display  = ("property", "media_type", "created_at")
+    list_filter   = ("media_type",)
+    search_fields = ("property__title",)

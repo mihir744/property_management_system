@@ -1290,12 +1290,12 @@ a {
     transform: translateX(-100%);
   }
 
-  .sidebar.is-open {
-    transform: translateX(0);
+   .sidebar-overlay {
+    display: none; /* hidden by default */
   }
 
-  .sidebar-overlay {
-    display: block;
+  .sidebar-overlay.is-open {
+    display: block; /* only shown when sidebar is toggled open */
   }
 
   .mobile-menu-button {

@@ -1,0 +1,123 @@
+{% load static %}
+
+<!-- ═══════════════════ PROPERTY CHOOSER ═══════════════════ -->
+<section id="homeSection" class="property-chooser reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-kicker">Explore</div>
+      <h2 class="section-title">What are you looking for?</h2>
+      <p class="section-subtitle">Browse our collection of properties across PCMC</p>
+    </div>
+
+    <div class="chooser-cards stagger">
+      <div class="chooser-card" onclick="filterProperties('rent')">
+        <div class="chooser-icon">🏠</div>
+        <h3>Rent a Home</h3>
+        <p>Furnished &amp; unfurnished rentals — 1RK to 3BHK</p>
+        <span class="chooser-cta">Browse Rentals →</span>
+      </div>
+      <div class="chooser-card" onclick="filterProperties('sale')">
+        <div class="chooser-icon">🏡</div>
+        <h3>Buy a Property</h3>
+        <p>Invest in your future — residential &amp; commercial</p>
+        <span class="chooser-cta">Browse for Sale →</span>
+      </div>
+      <div class="chooser-card chooser-card--both" onclick="filterProperties('all')">
+        <div class="chooser-icon">🔍</div>
+        <h3>Show All</h3>
+        <p>View every available listing in one place</p>
+        <span class="chooser-cta">See Everything →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════ RECOMMENDED ═══════════════════ -->
+{% if user.is_authenticated and recommended_properties %}
+<section class="recommended-section reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-kicker">Curated for you</div>
+      <h2 class="section-title">Recommended</h2>
+      <p class="section-subtitle">Based on your preferences</p>
+    </div>
+    <div class="properties-grid stagger" id="recommendedGrid">
+      <p>Under construction</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════ FILTERED PROPERTIES ═══════════════════ -->
+<section id="propertiesSection" class="properties reveal" style="display:none">
+  <div class="container">
+    <div class="section-header">
+      <button class="back-btn" onclick="goBackToChooser()">← Back</button>
+      <div class="section-kicker" id="propertiesKicker">Explore</div>
+      <h2 class="section-title" id="propertiesTitle">Available Properties</h2>
+      <p class="section-subtitle" id="propertiesSubtitle">Browse our full collection</p>
+    </div>
+
+    <!-- All rent cards (hidden by default, JS filters) -->
+    <div class="properties-grid stagger" id="propertiesGrid">
+      {% for p in properties %}
+        <div class="property-card-wrapper"
+             data-listing="{{ p.listing_type }}"
+             onclick="openPropertyModal(this)">
+          <div class="property-image-wrap">
+            {% with p.media.all|first as media %}
+              {% if media and media.media_type == "image" %}
+                <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
+              {% else %}
+                <img src="{% static 'images/default-property.jpg' %}" alt="Property" class="property-image">
+              {% endif %}
+            {% endwith %}
+            <span class="property-badge">
+              {% if p.listing_type == 'rent' %}For Rent{% else %}For Sale{% endif %}
+            </span>
+          </div>
+          <div class="property-info">
+            <h3>{{ p.title }}</h3>
+            <p>{{ p.city_area }}</p>
+            <p class="price">₹ {{ p.price }}{% if p.listing_type == 'rent' %}/mo{% endif %}</p>
+          </div>
+          <div class="property-footer">
+            <span class="property-cta">View details →</span>
+          </div>
+          <!-- Hidden data for modal -->
+          <template class="property-data">
+            <data-title>{{ p.title }}</data-title>
+            <data-area>{{ p.city_area }}</data-area>
+            <data-price>₹ {{ p.price }}{% if p.listing_type == 'rent' %}/mo{% endif %}</data-price>
+            <data-desc>{{ p.description }}</data-desc>
+            {% with p.media.all|first as media %}
+              {% if media and media.media_type == "image" %}
+                <data-img>{{ media.file.url }}</data-img>
+              {% endif %}
+            {% endwith %}
+            <data-media>
+              {% for m in p.media.all %}
+                {% if m.media_type == "image" %}
+                  <img src="{{ m.file.url }}" class="detail-image">
+                {% else %}
+                  <video controls class="detail-video"><source src="{{ m.file.url }}"></video>
+                {% endif %}
+              {% endfor %}
+            </data-media>
+          </template>
+        </div>
+      {% empty %}
+        <p class="empty-state">No properties listed yet.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Load more -->
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+      <button class="btn-load-more" id="loadMoreBtn" onclick="loadMoreProperties()">
+        Load more properties
+      </button>
+    </div>
+  </div>
+</section>

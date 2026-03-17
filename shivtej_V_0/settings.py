@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'shivtej_V_0.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shivtej_db',
+        'NAME': 'shivtej_db1',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',

@@ -1,0 +1,294 @@
+/* ============================================================
+   base.css — Shivtej Real Estate
+   Shared design tokens + common components.
+   Loaded by: login.html, signup.html, dashboard.html (and home.html)
+   Page-specific styles go in their own file (login.css, etc.)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  /* Colours */
+  --color-ink:        #0d0d0d;
+  --color-ink-60:     rgba(13, 13, 13, 0.60);
+  --color-ink-30:     rgba(13, 13, 13, 0.30);
+  --color-ink-10:     rgba(13, 13, 13, 0.06);
+  --color-paper:      #f7f6f3;
+  --color-white:      #ffffff;
+  --color-accent:     #2563eb;
+  --color-accent-dim: rgba(37, 99, 235, 0.08);
+  --color-line:       rgba(13, 13, 13, 0.10);
+
+  /* Status colours */
+  --color-error:      #b91c1c;
+  --color-error-bg:   rgba(239, 68, 68, 0.06);
+  --color-error-line: rgba(239, 68, 68, 0.20);
+  --color-success:    #166534;
+  --color-success-bg: rgba(22, 163, 74, 0.06);
+  --color-success-line: rgba(22, 163, 74, 0.20);
+  --color-info:       #2563eb;
+  --color-info-bg:    rgba(37, 99, 235, 0.06);
+  --color-info-line:  rgba(37, 99, 235, 0.20);
+
+  /* Typography */
+  --font-sans:   'Outfit', sans-serif;
+  --font-serif:  'Cormorant Garamond', serif;
+
+  /* Radii */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+
+  /* Motion */
+  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --transition:  0.20s var(--ease);
+}
+
+/* ── Base Body ──────────────────────────────────────────── */
+body {
+  font-family: var(--font-sans);
+  background:  var(--color-paper);
+  color:       var(--color-ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Custom Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-ink-30); border-radius: 99px; }
+
+/* ── Alert / Flash Messages ─────────────────────────────── */
+/* Usage: <div class="alert alert--error">…</div>            */
+.alert {
+  padding:       12px 16px;
+  border-radius: var(--radius-md);
+  font-size:     14px;
+  margin-bottom: 16px;
+  border:        1px solid transparent;
+}
+.alert--error {
+  background:    var(--color-error-bg);
+  border-color:  var(--color-error-line);
+  color:         var(--color-error);
+}
+.alert--success {
+  background:    var(--color-success-bg);
+  border-color:  var(--color-success-line);
+  color:         var(--color-success);
+}
+.alert--info {
+  background:    var(--color-info-bg);
+  border-color:  var(--color-info-line);
+  color:         var(--color-info);
+}
+
+
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 10px;
+  transition: transform 0.3s var(--ease);
+  background: var(--color-white);
+  padding: 4px;
+}
+
+.logo:hover .logo-img {
+  transform: scale(1.08);
+}
+.logo-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.3px;
+}
+
+/* ── Form Field ─────────────────────────────────────────── */
+/* Usage: <div class="form-field"><label>…</label><input>…</div> */
+.form-field {
+  margin-bottom: 20px;
+}
+.form-field__label {
+  display:         block;
+  font-size:       12px;
+  font-weight:     600;
+  letter-spacing:  1.5px;
+  text-transform:  uppercase;
+  color:           var(--color-ink-60);
+  margin-bottom:   8px;
+}
+.form-field__input {
+  width:           100%;
+  padding:         13px 16px;
+  border:          1px solid var(--color-line);
+  border-radius:   var(--radius-md);
+  background:      var(--color-paper);
+  font-family:     var(--font-sans);
+  font-size:       15px;
+  color:           var(--color-ink);
+  outline:         none;
+  transition:      border-color var(--transition),
+                   box-shadow   var(--transition),
+                   background   var(--transition);
+}
+.form-field__input::placeholder { color: var(--color-ink-30); }
+.form-field__input:focus {
+  border-color: var(--color-accent);
+  background:   var(--color-white);
+  box-shadow:   0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* ── Primary Button ─────────────────────────────────────── */
+/* Usage: <button class="btn-primary">…</button>             */
+.btn-primary {
+  width:         100%;
+  padding:       15px;
+  background:    var(--color-ink);
+  color:         var(--color-white);
+  border:        none;
+  border-radius: var(--radius-md);
+  font-family:   var(--font-sans);
+  font-size:     15px;
+  font-weight:   500;
+  cursor:        pointer;
+  letter-spacing: 0.2px;
+  transition:    background var(--transition),
+                 transform  0.20s var(--ease),
+                 box-shadow var(--transition);
+}
+.btn-primary:hover {
+  background:  #1a1a1a;
+  transform:   translateY(-2px);
+  box-shadow:  0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Ghost / Outline Button ─────────────────────────────── */
+.btn-ghost {
+  background:    var(--color-ink-10);
+  border:        1px solid var(--color-line);
+  padding:       12px 16px;
+  border-radius: var(--radius-sm);
+  font-family:   var(--font-sans);
+  font-size:     13px;
+  font-weight:   500;
+  color:         var(--color-ink);
+  cursor:        pointer;
+  white-space:   nowrap;
+  transition:    background var(--transition), color var(--transition), border-color var(--transition);
+}
+.btn-ghost:hover {
+  background:   var(--color-ink);
+  color:        var(--color-white);
+  border-color: var(--color-ink);
+}
+
+/* ── Brand Logo Block ───────────────────────────────────── */
+/* Used in auth panels + sidebar                             */
+/* Usage: <a class="brand-logo"><div class="brand-logo__icon">SR</div><span class="brand-logo__text">…</span></a> */
+.brand-logo {
+  display:         flex;
+  align-items:     center;
+  gap:             14px;
+  text-decoration: none;
+}
+.brand-logo__icon {
+  width:           44px;
+  height:          44px;
+  border-radius:   10px;
+  background:      var(--color-white);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-family:     var(--font-serif);
+  font-size:       16px;
+  font-weight:     600;
+  color:           var(--color-ink);
+  letter-spacing:  0.3px;
+  flex-shrink:     0;
+}
+.brand-logo__text {
+  font-family: var(--font-serif);
+  font-size:   20px;
+  font-weight: 400;
+  color:       var(--color-white);
+  letter-spacing: -0.2px;
+}
+
+/* ── Auth Switch Link Row ───────────────────────────────── */
+/* Usage: <p class="auth-switch">…<a>…</a></p>              */
+.auth-switch {
+  text-align:    center;
+  margin-top:    28px;
+  font-size:     14px;
+  color:         var(--color-ink-60);
+}
+.auth-switch a {
+  color:          var(--color-accent);
+  text-decoration: none;
+  font-weight:    500;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+/* ── Section Kicker / Title / Subtitle ─────────────────── */
+/* Used on home + dashboard sections                         */
+.section-kicker {
+  font-size:      12px;
+  font-weight:    600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color:          var(--color-accent);
+  margin-bottom:  8px;
+}
+.section-title {
+  font-family:    var(--font-serif);
+  font-size:      clamp(28px, 3vw, 42px);
+  font-weight:    300;
+  color:          var(--color-ink);
+  letter-spacing: -0.8px;
+  line-height:    1.1;
+}
+.section-subtitle {
+  font-size:   15px;
+  color:       var(--color-ink-60);
+  font-weight: 300;
+  margin-top:  10px;
+}
+
+/* ── Property Card ──────────────────────────────────────── */
+/* Shared card shell used on home + dashboard               */
+.property-card {
+  background:    var(--color-white);
+  border:        1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow:      hidden;
+  cursor:        pointer;
+  transition:    transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.property-card:hover {
+  transform:  translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Utility ────────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}

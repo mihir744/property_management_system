@@ -68,7 +68,8 @@ def signup(request):
     
     return render(request, "core/signup.html")
 
-
+def dashboard(request):
+    return render(request, "core/dashboard.html")
 def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]

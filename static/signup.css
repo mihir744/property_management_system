@@ -1,0 +1,166 @@
+/* ============================================================
+   signup.css — Shivtej Real Estate
+   Signup-page-specific styles only.
+   base.css must be loaded first for tokens + shared components.
+   ============================================================ */
+
+/* ── Two-column page shell ──────────────────────────────── */
+body {
+  display:              grid;
+  grid-template-columns: 1fr 1fr;
+  min-height:           100vh;
+}
+
+
+/* ── Left decorative panel ──────────────────────────────── */
+.auth-panel-left {
+  background:     var(--color-ink);
+  position:       relative;
+  overflow:       hidden;
+  display:        flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding:        56px 64px;
+  min-height:     100vh;
+}
+
+/* Dot-grid texture */
+.auth-panel-left::before {
+  content:          '';
+  position:         absolute;
+  inset:            0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:  32px 32px;
+  pointer-events:   none;
+}
+
+/* Glow orb – top-left for signup (bottom-right on login) */
+.auth-panel-left::after {
+  content:    '';
+  position:   absolute;
+  top:        -120px;
+  left:       -120px;
+  width:      450px;
+  height:     450px;
+  background: radial-gradient(circle, rgba(37,99,235,.14) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Headline */
+.auth-panel-left__headline {
+  position: relative;
+}
+.auth-panel-left__headline h2 {
+  font-family:    var(--font-serif);
+  font-size:      clamp(40px, 4vw, 62px);
+  font-weight:    300;
+  color:          var(--color-white);
+  line-height:    1.05;
+  letter-spacing: -1.5px;
+  margin-bottom:  20px;
+}
+.auth-panel-left__headline h2 em {
+  font-style: italic;
+  color:      rgba(255, 255, 255, 0.45);
+}
+.auth-panel-left__headline p {
+  font-size:   15px;
+  color:       rgba(255, 255, 255, 0.40);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width:   340px;
+}
+
+/* Step list */
+.auth-panel-left__steps {
+  display:        flex;
+  flex-direction: column;
+  gap:            18px;
+  position:       relative;
+}
+.signup-step {
+  display:     flex;
+  align-items: flex-start;
+  gap:         16px;
+}
+.signup-step__number {
+  width:           30px;
+  height:          30px;
+  flex-shrink:     0;
+  border-radius:   var(--radius-sm);
+  background:      rgba(255, 255, 255, 0.10);
+  border:          1px solid rgba(255, 255, 255, 0.12);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-family:     var(--font-serif);
+  font-size:       15px;
+  color:           rgba(255, 255, 255, 0.50);
+  margin-top:      2px;
+}
+.signup-step__text {
+  font-size:   14px;
+  color:       rgba(255, 255, 255, 0.50);
+  line-height: 1.5;
+}
+.signup-step__text strong {
+  display:       block;
+  color:         rgba(255, 255, 255, 0.80);
+  font-weight:   500;
+  margin-bottom: 2px;
+}
+
+/* ── Right form panel ───────────────────────────────────── */
+.auth-panel-right {
+  background:      var(--color-white);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         56px 48px;
+  min-height:      100vh;
+}
+
+.auth-form-container {
+  width:     100%;
+  max-width: 400px;
+}
+
+.auth-form-container__title {
+  font-family:    var(--font-serif);
+  font-size:      40px;
+  font-weight:    400;
+  color:          var(--color-ink);
+  letter-spacing: -1px;
+  margin-bottom:  6px;
+}
+
+.auth-form-container__desc {
+  font-size:     14px;
+  color:         var(--color-ink-60);
+  font-weight:   300;
+  margin-bottom: 40px;
+}
+
+/* Side-by-side fields row */
+.form-row--two-col {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   16px;
+}
+
+/* Terms copy below submit */
+.signup-terms {
+  font-size:   12px;
+  color:       var(--color-ink-30);
+  text-align:  center;
+  margin-top:  16px;
+  line-height: 1.7;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 680px) {
+  body { grid-template-columns: 1fr; }
+  .auth-panel-left       { display: none; }
+  .auth-panel-right      { padding: 40px 24px; }
+  .form-row--two-col     { grid-template-columns: 1fr; }
+}

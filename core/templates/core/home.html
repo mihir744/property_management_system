@@ -27,17 +27,18 @@
   <div class="header-main">
     <div class="header-content">
       <a href="/" class="logo">
-        <div class="logo-icon">SR</div>
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-img">
         <span class="logo-text" id="companyName">Shivtej Real Estate</span>
       </a>
 
       <nav class="nav-menu">
         <a href="#" class="nav-link active" onclick="showSection('home',event)">Home</a>
-        <a href="#" class="nav-link" onclick="showSection('rent',event)">Rent</a>
-        <a href="#" class="nav-link" onclick="showSection('sale',event)">Buy</a>
-        <a href="#" class="nav-link" onclick="showSection('commercial',event)">Commercial</a>
+        <a href="#" class="nav-link" onclick="filterProperties('rent',event)">Rent</a>
+        <a href="#" class="nav-link" onclick="filterProperties('sale',event)">Buy</a>
+
         {% if user.is_authenticated %}
           <a href="{% url 'preferences' %}" class="nav-link">Preferences</a>
+          <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
           <a href="{% url 'logout' %}" class="nav-link">Log out</a>
         {% else %}
           <a href="{% url 'login' %}" class="nav-link">Login</a>
@@ -51,13 +52,16 @@
         <a href="{% url 'signup' %}" class="btn-signup">Get Started</a>
       </div>
       {% endif %}
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleNav()" aria-label="Toggle menu" style="display:none">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </header>
 
 
 <!-- ═══════════════════ HERO ═══════════════════ -->
-<section id="homeSection" class="hero">
+<section id="heroSection" class="hero">
   <div class="hero-content">
 
     <!-- LEFT -->
@@ -66,11 +70,11 @@
 
       <h1 class="hero-title" id="heroTitle">
         Find Your<br>
-        <em>Rented</em> home
+        <em>Perfect</em> home
       </h1>
 
       <p class="hero-subtitle" id="heroSubtitle">
-        Shivtej Real Estate brings you handpicked homes, commercial spaces & rented homes — with guidance you can trust.
+        Shivtej Real Estate brings you handpicked homes, commercial spaces &amp; rented homes — with guidance you can trust.
       </p>
 
       <div class="search-box">
@@ -108,105 +112,8 @@
 </section>
 
 
-<!-- ═══════════════════ RECOMMENDED ═══════════════════ -->
-{% load static %}
-{% if user.is_authenticated and recommended_properties %}
-<section class="recommended-section reveal">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-kicker">Curated for you</div>
-      <h2 class="section-title">Recommended</h2>
-      <p class="section-subtitle">Based on your preferences</p>
-    </div>
-    <div class="properties-grid stagger" id="recommendedGrid">
-      {% for p in recommended_properties %}
-      <div class="property-card" onclick="toggleDetails({{ p.id }},this)">
-        <div class="property-image-wrap">
-          {% with p.media.all|first as media %}
-            {% if media and media.media_type == "image" %}
-              <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
-            {% else %}
-              <img src="{% static 'images/default-property.jpg' %}" alt="Property" class="property-image">
-            {% endif %}
-          {% endwith %}
-          <span class="property-badge">Recommended</span>
-        </div>
-        <div class="property-info">
-          <h3>{{ p.title }}</h3>
-          <p>{{ p.city_area }}</p>
-          <p class="rent">₹ {{ p.rent }}</p>
-        </div>
-        <div class="property-footer">
-          <span class="property-cta">View details →</span>
-        </div>
-        <div class="property-details" id="details-{{ p.id }}" style="display:none">
-          <p>{{ p.description }}</p>
-          <div class="property-media">
-            {% for m in p.media.all %}
-              {% if m.media_type == "image" %}
-                <img src="{{ m.file.url }}" class="detail-image">
-              {% else %}
-                <video controls class="detail-video"><source src="{{ m.file.url }}"></video>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-
-
-<!-- ═══════════════════ ALL PROPERTIES ═══════════════════ -->
-<section id="propertiesSection" class="properties reveal">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-kicker">Explore</div>
-      <h2 class="section-title">Available Properties</h2>
-      <p class="section-subtitle">Browse our full collection</p>
-    </div>
-    <div class="properties-grid stagger">
-      {% for p in properties %}
-      <div class="property-card" onclick="toggleDetails({{ p.id }},this)">
-        <div class="property-image-wrap">
-          {% with p.media.all|first as media %}
-            {% if media and media.media_type == "image" %}
-              <img src="{{ media.file.url }}" alt="{{ p.title }}" class="property-image">
-            {% else %}
-              <img src="{% static 'images/default-property.jpg' %}" alt="Property" class="property-image">
-            {% endif %}
-          {% endwith %}
-          <span class="property-badge">Available</span>
-        </div>
-        <div class="property-info">
-          <h3>{{ p.title }}</h3>
-          <p>{{ p.city_area }}</p>
-          <p class="rent">₹ {{ p.rent }}</p>
-        </div>
-        <div class="property-footer">
-          <span class="property-cta">View details →</span>
-        </div>
-        <div class="property-details" id="details-{{ p.id }}" style="display:none">
-          <p>{{ p.description }}</p>
-          <div class="property-media">
-            {% for m in p.media.all %}
-              {% if m.media_type == "image" %}
-                <img src="{{ m.file.url }}" class="detail-image">
-              {% else %}
-                <video controls class="detail-video"><source src="{{ m.file.url }}"></video>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-      {% empty %}
-        <p class="empty-state">No properties listed yet.</p>
-      {% endfor %}
-    </div>
-  </div>
-</section>
+<!-- ═══════════════════ PROPERTIES (separate template) ═══════════════════ -->
+{% include "properties.html" %}
 
 
 <!-- ═══════════════════ ADMIN USERS ═══════════════════ -->
@@ -227,7 +134,7 @@
     <div class="section-header">
       <div class="section-kicker">Let's talk</div>
       <h2 class="section-title">Get in Touch</h2>
-      <p class="section-subtitle">We responds within a few hours</p>
+      <p class="section-subtitle">We respond within a few hours</p>
     </div>
     <div class="contact-grid stagger">
       <div class="contact-card">
@@ -250,6 +157,30 @@
 </section>
 
 
+<!-- ═══════════════════ PROPERTY MODAL ═══════════════════ -->
+<div id="propertyModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modalImg" class="modal-hero-img" src="" alt="">
+    <div class="modal-content">
+      <h2 id="modalTitle" class="modal-title"></h2>
+      <p  id="modalArea"  class="modal-area"></p>
+      <p  id="modalRent"  class="modal-rent"></p>
+      <div id="modalBody" class="modal-desc"></div>
+
+      <div class="modal-actions">
+        <a class = "modal-btn modal-btn--call" href="tel:+948605452622">
+          <span class="modal-btn-icon">📞</span> Call Us
+        </a>
+        <a class="modal-btn modal-btn--whatsapp" href="https://wa.me/918605452622" target="_blank" rel="noopener">
+          <span class="modal-btn-icon">💬</span> Whatsapp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
 <footer class="footer">
   <p>
@@ -268,17 +199,120 @@ window.addEventListener('scroll', () => {
   header.classList.toggle('scrolled', window.scrollY > 8);
 }, { passive: true });
 
-/* ── Toggle property details ── */
-function toggleDetails(id, card) {
-  const panel = document.getElementById('details-' + id);
-  const cta   = card.querySelector('.property-cta');
-  if (!panel) return;
-  const open = panel.style.display === 'none' || !panel.style.display;
-  panel.style.display = open ? 'block' : 'none';
-  if (cta) cta.textContent = open ? 'Close ✕' : 'View details →';
+
+/* ══════════════════════════════════════════
+   PROPERTY FILTER + LOAD MORE
+══════════════════════════════════════════ */
+const PAGE_SIZE = 5;
+let currentFilter  = 'all';
+let visibleCount   = 0;
+let filteredCards  = [];
+
+function filterProperties(type, event) {
+  if (event) event.preventDefault();
+
+  currentFilter = type;
+  visibleCount  = 0;
+
+  // Show the properties section, hide chooser
+  document.getElementById('homeSection').style.display    = 'none';
+  document.getElementById('propertiesSection').style.display = 'block';
+
+  // Update section header text
+  const kicker   = document.getElementById('propertiesKicker');
+  const title    = document.getElementById('propertiesTitle');
+  const subtitle = document.getElementById('propertiesSubtitle');
+
+  if (type === 'rent') {
+    kicker.textContent   = 'For Rent';
+    title.textContent    = 'Rental Properties';
+    subtitle.textContent = 'Homes available for monthly rent';
+  } else if (type === 'sale') {
+    kicker.textContent   = 'For Sale';
+    title.textContent    = 'Properties for Sale';
+    subtitle.textContent = 'Own your dream home';
+  } else {
+    kicker.textContent   = 'Explore';
+    title.textContent    = 'All Available Properties';
+    subtitle.textContent = 'Every listing in one place';
+  }
+
+  // Filter & render
+  const all = Array.from(document.querySelectorAll('#propertiesGrid .property-card-wrapper'));
+  filteredCards = type === 'all'
+    ? all
+    : all.filter(c => c.dataset.listing === type);
+
+  // Hide all first
+  all.forEach(c => { c.style.display = 'none'; c.style.opacity = '0'; c.style.transform = 'translateY(16px)'; });
+
+  renderNextBatch();
+
+  // Scroll to section
+  document.getElementById('propertiesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Update active nav link
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 }
 
-/* ── Scroll reveal ── */
+function renderNextBatch() {
+  const batch = filteredCards.slice(visibleCount, visibleCount + PAGE_SIZE);
+  batch.forEach((card, i) => {
+    card.style.display = '';
+    setTimeout(() => {
+      card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+      card.style.opacity    = '1';
+      card.style.transform  = 'none';
+    }, i * 80);
+  });
+  visibleCount += batch.length;
+
+  // Show/hide load-more button
+  const wrap = document.getElementById('loadMoreWrap');
+  wrap.style.display = visibleCount < filteredCards.length ? 'flex' : 'none';
+}
+
+function loadMoreProperties() {
+  renderNextBatch();
+}
+
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+function openPropertyModal(card) {
+  const tmpl   = card.querySelector('template.property-data');
+  if (!tmpl) return;
+  const doc    = tmpl.content;
+
+  document.getElementById('modalTitle').textContent = doc.querySelector('data-title')?.textContent || '';
+  document.getElementById('modalArea').textContent  = doc.querySelector('data-area')?.textContent  || '';
+  document.getElementById('modalRent').textContent  = doc.querySelector('data-price')?.textContent || '';
+  document.getElementById('modalImg').src           = doc.querySelector('data-img')?.textContent?.trim() || '';
+
+  const mediaEl = doc.querySelector('data-media');
+  const descEl  = doc.querySelector('data-desc');
+  document.getElementById('modalBody').innerHTML =
+    `<p>${descEl?.textContent || ''}</p>` + (mediaEl?.innerHTML || '');
+
+  document.getElementById('propertyModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('propertyModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('propertyModal')
+  .addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+
+/* ══════════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════════ */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
@@ -304,6 +338,35 @@ const cardIO = new IntersectionObserver(entries => {
 }, { threshold: 0.05 });
 
 document.querySelectorAll('.stagger').forEach(el => cardIO.observe(el));
+
+
+/* ── Hamburger nav toggle ── */
+function toggleNav() {
+  document.querySelector('.nav-menu').classList.toggle('open');
+}
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.nav-menu').classList.remove('open');
+  });
+});
+
+function updateHamburger() {
+  const btn = document.getElementById('hamburgerBtn');
+  if (btn) btn.style.display = window.innerWidth <= 680 ? 'flex' : 'none';
+}
+updateHamburger();
+window.addEventListener('resize', updateHamburger);
+
+function goBackToChooser() {
+  document.getElementById('propertiesSection').style.display = 'none';
+  document.getElementById('homeSection').style.display = 'block';
+
+  // scroll back nicely
+  document.getElementById('homeSection').scrollIntoView({
+    behavior: 'smooth'
+  });
+}
 </script>
 
 </body>

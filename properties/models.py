@@ -39,7 +39,7 @@ class PropertyMedia(models.Model):
         related_name="media",
         on_delete=models.CASCADE
     )
-    file = models.FileField(upload_to="properties/media/")
+    file = models.FileField(upload_to="properties/")
     media_type = models.CharField(
         max_length=10,
         choices= MEDIA_TYPE_CHOICES

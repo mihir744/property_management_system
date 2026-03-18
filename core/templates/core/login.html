@@ -84,14 +84,32 @@
 
         <div class="form-field">
           <label class="form-field__label" for="login-password">Password</label>
-          <input
-            class="form-field__input"
-            id="login-password"
-            type="password"
-            name="password"
-            placeholder="Your password"
-            required
-            autocomplete="current-password">
+          <div style="position: relative;">
+            <input
+              class="form-field__input"
+              id="login-password"
+              type="password"
+              name="password"
+              placeholder="Your password"
+              required
+              autocomplete="current-password">
+                  <!-- 👁️ Toggle Button -->
+              <button
+                type="button"
+                onclick="togglePassword()"
+                style="
+                  position: absolute;
+                  right: 10px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                ">
+                👁️
+              </button>
+
+          </div>
         </div>
 
         <button
@@ -160,6 +178,15 @@
             msgEl.textContent = data.msg;
           }
         });
+    }
+    function togglePassword(){
+      const passwordInput = document.getElementById("login-password");
+
+      if (passwordInput.type === "password"){
+        passwordInput.type = "text"
+      } else {
+        passwordInput.type = "password";
+      }
     }
   </script>
 

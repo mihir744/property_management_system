@@ -11,7 +11,7 @@ import dj_database_url
 # Paths
 # ------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+print("BASE_DIR =", BASE_DIR)
 # ------------------------------------------------
 # Security
 # ------------------------------------------------
@@ -92,7 +92,17 @@ DATABASES = {
         conn_max_age=600
     )
 }
-
+#local database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'mydb',
+#         'USER': 'postgres',        # your postgres username
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 # ------------------------------------------------
 # Password validation
 # ------------------------------------------------
@@ -114,17 +124,21 @@ USE_I18N = True
 USE_TZ = True
 
 # ------------------------------------------------
-# Static files
+# Static files procution
 # ------------------------------------------------
 STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Static files (DEV)
+# STATIC_URL = "/static/"
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
+
+# ❌ REMOVE these for now
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ------------------------------------------------
 # Media files

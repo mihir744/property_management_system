@@ -1322,6 +1322,10 @@ a {
   .preferences-grid {
     grid-template-columns: 1fr;
   }
+
+  .sidebar.is-open {
+    transform: translate(0);
+  }
 }
 
 @media (max-width: 560px) {
